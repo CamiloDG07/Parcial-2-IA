@@ -1,0 +1,31 @@
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Estado inicial} & \textbf{Trayectoria} & \textbf{Estado final} & \textbf{Valor final} & \textbf{¿Global?} \\
+\hline
+$0$ & $0$ $\to$ $1$ $\to$ $2$ & $2$ & $7$ & No \\
+\hline
+$1$ & $1$ $\to$ $2$ & $2$ & $7$ & No \\
+\hline
+$2$ & $2$ & $2$ & $7$ & No \\
+\hline
+$3$ & $3$ $\to$ $2$ & $2$ & $7$ & No \\
+\hline
+$4$ & $4$ $\to$ $5$ $\to$ $6$ & $6$ & $9$ & Sí \\
+\hline
+$5$ & $5$ $\to$ $6$ & $6$ & $9$ & Sí \\
+\hline
+$6$ & $6$ & $6$ & $9$ & Sí \\
+\hline
+$7$ & $7$ $\to$ $6$ & $6$ & $9$ & Sí \\
+\hline
+$8$ & $8$ $\to$ $7$ $\to$ $6$ & $6$ & $9$ & Sí \\
+\hline
+\end{tabular}
+\caption{Resultado del ascenso de colinas desde los nueve estados iniciales.}
+\label{tab:p2b-trayectorias}
+\end{table}
