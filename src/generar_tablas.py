@@ -47,22 +47,73 @@ def macro(nombre, valor):
     MACROS.append(f"\\newcommand{{\\{nombre}}}{{{valor}}}")
 
 
+def celda(texto, fondo=None, negrita=False):
+    """Celda con fondo opcional; la negrita tambien alcanza a formulas."""
+    if negrita and texto:
+        texto = f"{{\\bfseries\\boldmath {texto}}}"
+    if fondo:
+        return f"\\cellcolor{{{fondo}}}{texto}"
+    return texto
+
+
+def leyenda(cebra, col_iter, nombre_iter, destacadas, descripcion):
+    """Frase del pie que explica cada color usado en la tabla."""
+    partes = []
+    if col_iter is not None:
+        partes.append(f"el fondo azul marca la columna de {nombre_iter}")
+    if cebra:
+        partes.append("el gris claro alterna las filas")
+    if destacadas:
+        partes.append("el fondo amarillo, con el número en negrita, "
+                      f"señala {descripcion}")
+    if not partes:
+        return ""
+    return " En la tabla, " + "; ".join(partes) + "."
+
+
 def tabla(nombre, encabezados, filas, caption, etiqueta, formato=None,
-          tamano="\\small", espaciado=1.15, separacion=6):
-    """Escribe una tabla con cuadricula visible y pie debajo."""
+          tamano="\\small", espaciado=1.15, separacion=6, bloques=1,
+          cebra=False, col_iter=None, nombre_iter="iteración",
+          destacadas=(), descripcion=""):
+    """Escribe una tabla con cuadricula visible y pie debajo.
+
+    El encabezado siempre lleva fondo. Las tablas largas piden cebra por
+    fila, columna de iteracion (indice dentro de cada bloque) y filas
+    destacadas, dadas como indices de la lista original antes de repartirla
+    en bloques.
+    """
     columnas = formato or "|" + "c|" * len(encabezados)
+    ancho = len(encabezados) // bloques
+    alto = len(filas)
+    marcadas = {(j % alto, j // alto) for j in destacadas}
+    pie = caption + leyenda(cebra, col_iter, nombre_iter, destacadas,
+                            descripcion)
     lineas = [
         "\\begin{table}[H]", "\\centering", tamano,
         f"\\setlength{{\\tabcolsep}}{{{separacion}pt}}",
         f"\\renewcommand{{\\arraystretch}}{{{espaciado}}}",
         f"\\begin{{tabular}}{{{columnas}}}", "\\hline",
-        " & ".join(f"\\textbf{{{h}}}" for h in encabezados) + " \\\\",
+        "\\rowcolor{encabezado}"
+        + " & ".join(f"\\textbf{{{h}}}" for h in encabezados) + " \\\\",
         "\\hline",
     ]
-    for fila in filas:
-        lineas.append(" & ".join(str(c) for c in fila) + " \\\\")
+    for i, fila in enumerate(filas):
+        celdas = []
+        for k, c in enumerate(fila):
+            bloque, pos = divmod(k, ancho)
+            texto = str(c)
+            es_iter = pos == col_iter and texto != ""
+            if (i, bloque) in marcadas and texto != "":
+                celdas.append(celda(texto, "destacado", es_iter))
+            elif es_iter:
+                celdas.append(celda(texto, "iteracion", True))
+            elif cebra and (i + 1) % 2 == 0:
+                celdas.append(celda(texto, "cebra"))
+            else:
+                celdas.append(celda(texto))
+        lineas.append(" & ".join(celdas) + " \\\\")
         lineas.append("\\hline")
-    lineas += ["\\end{tabular}", f"\\caption{{{caption}}}",
+    lineas += ["\\end{tabular}", f"\\caption{{{pie}}}",
                f"\\label{{{etiqueta}}}", "\\end{table}"]
     (TABLAS / f"{nombre}.tex").write_text(
         "\n".join(lineas) + "\n", encoding="utf-8")
@@ -123,12 +174,19 @@ def punto1(a, b):
             "Sí" if b["encontro_optimo"] else "No"]],
           "Mejor individuo de la población final (generación 20).",
           "tab:p1b-resumen")
+    primera = hist.index(b["optimo_global"])
+    resaltadas = [0, primera]
+    explicacion = ("la generación 0 (población inicial) y la generación "
+                   f"{primera} (primera en que aparece "
+                   f"{texttt(b['mejor_cromosoma'])})")
     filas = [[entero(g), entero(v)] for g, v in enumerate(hist)]
     tabla("p1_b_historial", ["Gen.", "Mejor aptitud"] * 3,
           en_bloques(filas, 3),
           "Historial de la mejor aptitud por generación (la generación 0 "
           "es la población inicial).", "tab:p1b-historial",
-          tamano="\\footnotesize", separacion=4)
+          tamano="\\footnotesize", separacion=4, bloques=3, cebra=True,
+          col_iter=0, nombre_iter="generación", destacadas=resaltadas,
+          descripcion=explicacion)
     filas = [[entero(g), " ".join(texttt(c) for c in p),
               entero(len(set(p)))] for g, p in enumerate(pob)]
     tabla("p1_b_poblaciones",
@@ -136,7 +194,9 @@ def punto1(a, b):
           en_bloques(filas, 2),
           "Población de cada generación y número de cromosomas distintos.",
           "tab:p1b-poblaciones", tamano="\\footnotesize", separacion=3,
-          formato="|c|l|c|c|l|c|")
+          formato="|c|l|c|c|l|c|", bloques=2, cebra=True, col_iter=0,
+          nombre_iter="generación", destacadas=resaltadas,
+          descripcion=explicacion)
     macro("PunoMejor", texttt(b["mejor_cromosoma"]))
     macro("PunoX", entero(b["mejor_x"]))
     macro("PunoAptitud", entero(b["mejor_aptitud"]))
@@ -259,23 +319,36 @@ def punto3(a, b):
             entero(b["energia_final"])]],
           "Resultado del temple simulado tras 100 iteraciones.",
           "tab:p3b-resumen")
+    mejor_it = next(f["iteracion"] for f in hist
+                    if f["mejor_energia"] == b["energia_minima"])
+    peores = [f["iteracion"] for f in hist
+              if f["delta"] > 0 and f["aceptado"]]
+    lista_peores = ", ".join(str(i) for i in peores)
+    explicacion = (
+        f"la iteración {mejor_it} (se alcanza la mejor energía) y las "
+        f"iteraciones {lista_peores} (se aceptó un candidato peor)")
     filas = [[entero(f["iteracion"]), num(f["temperatura"], 4)]
              for f in hist]
     tabla("p3_b_temperatura", ["Iter.", "$T$"] * 5,
           en_bloques(filas, 5),
           "Historial de la temperatura usada en cada iteración.",
-          "tab:p3b-temperatura", tamano="\\scriptsize", separacion=3)
+          "tab:p3b-temperatura", tamano="\\scriptsize", separacion=3,
+          bloques=5, cebra=True, col_iter=0,
+          destacadas=[i - 1 for i in [mejor_it] + peores],
+          descripcion=explicacion)
     filas = [[entero(f["iteracion"]), entero(f["estado_actual"]),
               entero(f["energia_actual"]), entero(f["mejor_estado"]),
               entero(f["mejor_energia"])] for f in completo]
+    inicial = (f"la iteración 0 (estado inicial, $x={fila0['estado_actual']}$"
+               f" y $E={fila0['energia_actual']}$), " + explicacion)
     tabla("p3_b_energia",
           ["Iter.", "$x$ actual", "$E$ actual", "$x$ mejor", "$E$ mejor"] * 3,
           en_bloques(filas, 3),
           "Historial del estado actual y de la mejor solución con sus "
           "energías (la iteración 0 es el estado inicial).",
-          "tab:p3b-energia", tamano="\\scriptsize", separacion=1.2)
-    mejor_it = next(f["iteracion"] for f in hist
-                    if f["mejor_energia"] == b["energia_minima"])
+          "tab:p3b-energia", tamano="\\scriptsize", separacion=1.2,
+          bloques=3, cebra=True, col_iter=0,
+          destacadas=[0, mejor_it] + peores, descripcion=inicial)
     salida = next(f["iteracion"] for f in hist
                   if f["iteracion"] > mejor_it
                   and f["energia_actual"] > b["energia_minima"])
@@ -357,17 +430,37 @@ def punto4(a, b):
     reg = b["registro"]
     filas = [[entero(f["iteracion"])] + [entero(c) for c in f["conteo"]]
              for f in reg]
+
+    def desde_cuando(valores):
+        """Indice desde el que A-B-Z es el unico maximo hasta el final."""
+        lider = [v[0] > max(v[1:]) for v in valores]
+        inicio = len(lider)
+        while inicio > 0 and lider[inicio - 1]:
+            inicio -= 1
+        assert inicio < len(lider)
+        return inicio
+
+    ini_conteo = desde_cuando([f["conteo"] for f in reg])
+    ini_prob = desde_cuando([f["probabilidades"] for f in reg])
     tabla("p4_b_conteo", ["Iter."] + rutas + ["Iter."] + rutas,
           en_bloques(filas, 2),
           "Elecciones de cada ruta por iteración (diez hormigas).",
-          "tab:p4b-conteo", formato="|c|c|c|c|c|c|c|c|")
+          "tab:p4b-conteo", formato="|c|c|c|c|c|c|c|c|", bloques=2,
+          cebra=True, col_iter=0, destacadas=[ini_conteo],
+          descripcion=f"la iteración {reg[ini_conteo]['iteracion']}, "
+          "primera desde la cual A-B-Z es la ruta más elegida en todas "
+          "las iteraciones siguientes")
     filas = [[entero(f["iteracion"])] + [num(p) for p in f["probabilidades"]]
              for f in reg]
     tabla("p4_b_probabilidades", ["Iter."] + rutas + ["Iter."] + rutas,
           en_bloques(filas, 2),
           "Probabilidad de elección de cada ruta al inicio de cada "
           "iteración.", "tab:p4b-probabilidades",
-          formato="|c|c|c|c|c|c|c|c|")
+          formato="|c|c|c|c|c|c|c|c|", bloques=2, cebra=True, col_iter=0,
+          destacadas=[ini_prob],
+          descripcion=f"la iteración {reg[ini_prob]['iteracion']}, "
+          "primera desde la cual A-B-Z es la ruta más probable en todas "
+          "las iteraciones siguientes")
     assert b["mejor_ruta_observada"] == "A-B-Z"
     p0, pf = reg[0]["probabilidades"], reg[-1]["probabilidades"]
     for i, sufijo in enumerate(["B", "C", "D"]):
@@ -441,7 +534,10 @@ def punto5(a, b):
           en_bloques(filas, 3),
           "Historial de la mejor aptitud global (la iteración 0 es la "
           "población inicial).", "tab:p5b-historial", tamano="\\footnotesize",
-          separacion=4)
+          separacion=4, bloques=3, cebra=True, col_iter=0,
+          destacadas=[0, len(hist) - 1],
+          descripcion=f"la iteración 0 (población inicial) y la iteración "
+          f"{len(hist) - 1} (la última)")
     assert all(x >= y for x, y in zip(hist, hist[1:]))
     macro("PcincoX", cientifico(b["mejor_posicion"][0], 3))
     macro("PcincoY", cientifico(b["mejor_posicion"][1], 3))
