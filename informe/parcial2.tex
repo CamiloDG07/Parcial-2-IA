@@ -20,7 +20,6 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{caption}
-\usepackage{listings}
 \usepackage{xurl}
 \setlist{itemsep=1pt,topsep=3pt,parsep=0pt}
 \captionsetup{font=small,labelfont=bf,position=bottom}
@@ -29,27 +28,6 @@
 \geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black}
 \graphicspath{{../data/}{../outputs/}}
-
-\lstset{
-  language=Python,
-  basicstyle=\ttfamily\scriptsize,
-  keywordstyle=\bfseries,
-  commentstyle=\itshape,
-  stringstyle=\ttfamily,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  captionpos=b,
-  breaklines=true,
-  breakatwhitespace=false,
-  frame=single,
-  columns=fullflexible,
-  keepspaces=true,
-  showstringspaces=false,
-  xleftmargin=1.5em
-}
-
-\renewcommand{\lstlistingname}{Código}
 
 % bloque "Cómo leerla" de figuras y tablas de resultados
 \newcommand{\comoleerla}[3]{%
@@ -208,10 +186,6 @@ una de las 20 generaciones: 21 valores. \\ \hline
 \label{tab:p1-decisiones}
 \end{table}
 
-\subsubsection{Código}
-
-\lstinputlisting[caption={Implementación del punto 1 (\texttt{punto1\_genetico.py}).}]{../src/punto1_genetico.py}
-
 \subsubsection{Resultados}
 
 \input{tablas/p1_b_resumen.tex}
@@ -368,10 +342,6 @@ que llegan al global, para $k=1,2,3,5$. \\ \hline
 \label{tab:p2-decisiones}
 \end{table}
 
-\subsubsection{Código}
-
-\lstinputlisting[caption={Implementación del punto 2 (\texttt{punto2\_ascenso\_colinas.py}).}]{../src/punto2_ascenso_colinas.py}
-
 \subsubsection{Resultados}
 
 \input{tablas/p2_b_trayectorias.tex}
@@ -502,10 +472,6 @@ como iteración ni decide nada. \\ \hline
 \caption{Decisiones de implementación del punto 3.}
 \label{tab:p3-decisiones}
 \end{table}
-
-\subsubsection{Código}
-
-\lstinputlisting[caption={Implementación del punto 3 (\texttt{punto3\_temple\_simulado.py}).}]{../src/punto3_temple_simulado.py}
 
 \subsubsection{Resultados}
 
@@ -659,10 +625,6 @@ menos una vez. \\ \hline
 \caption{Decisiones de implementación del punto 4.}
 \label{tab:p4-decisiones}
 \end{table}
-
-\subsubsection{Código}
-
-\lstinputlisting[caption={Implementación del punto 4 (\texttt{punto4\_aco.py}).}]{../src/punto4_aco.py}
 
 \subsubsection{Resultados}
 
@@ -841,10 +803,6 @@ de las 30 iteraciones: 31 valores. \\ \hline
 \caption{Decisiones de implementación del punto 5.}
 \label{tab:p5-decisiones}
 \end{table}
-
-\subsubsection{Código}
-
-\lstinputlisting[caption={Implementación del punto 5 (\texttt{punto5\_pso.py}).}]{../src/punto5_pso.py}
 
 \subsubsection{Resultados}
 
