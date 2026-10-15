@@ -1,6 +1,12 @@
 # Parcial 2: Fundamentos de Inteligencia Artificial
 
-Autor: Camilo Andrés Díaz García. Universidad Sergio Arboleda.
+Autores:
+
+- Camilo Andrés Díaz García
+- Juan David Andradé Gómez
+- Mario Jiménez López
+
+Universidad Sergio Arboleda.
 
 Algoritmos genéticos, ascenso de colinas, temple simulado, ACO y PSO.
 El enunciado está en `data/Parcial_2_IA.pdf`.
