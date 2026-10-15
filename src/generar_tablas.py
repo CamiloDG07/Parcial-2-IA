@@ -4,6 +4,7 @@ Ninguna cifra de los resultados se escribe a mano en el .tex: todo se
 lee de outputs y se escribe en informe/tablas.
 """
 import json
+import math
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -542,6 +543,8 @@ def punto5(a, b):
     macro("PcincoX", cientifico(b["mejor_posicion"][0], 3))
     macro("PcincoY", cientifico(b["mejor_posicion"][1], 3))
     macro("PcincoF", cientifico(b["mejor_aptitud"], 3))
+    macro("PcincoMaxFinal", cientifico(max(
+        math.hypot(x, y) for x, y in b["posiciones_finales"]), 2))
     macro("PcincoDist", cientifico(b["distancia_al_origen"], 3))
     macro("PcincoFInicial", num(hist[0], 3))
     macro("PcincoFUno", num(hist[1], 3))

@@ -16,6 +16,7 @@ NARANJA = "#d9731a"
 VERDE = "#2e8b57"
 GRIS = "#6b6b6b"
 COLORES_RUTAS = [AZUL, NARANJA, VERDE]
+LIMITE_P5 = 5
 
 plt.rcParams.update({
     "font.size": 9,
@@ -191,27 +192,61 @@ def figuras_punto5(datos):
     inicial = np.array(datos["posiciones_iniciales"])
     final = np.array(datos["posiciones_finales"])
     mejor = datos["mejor_posicion"]
-    malla = np.linspace(-5, 5, 300)
+    assert np.all(np.abs(inicial) <= LIMITE_P5), \
+        "posicion inicial fuera de [-5, 5]^2"
+    malla = np.linspace(-LIMITE_P5, LIMITE_P5, 300)
     X, Y = np.meshgrid(malla, malla)
-    figura, eje = plt.subplots(figsize=(5.0, 4.6))
+    figura, (eje, zoom) = plt.subplots(1, 2, figsize=(9.2, 4.9))
     contorno = eje.contour(X, Y, X ** 2 + Y ** 2,
                            levels=[1, 4, 9, 16, 25, 36], colors="#999999",
                            linewidths=0.7)
     eje.clabel(contorno, fmt=lambda v: f"{v:g}", fontsize=7)
+    borde = [-LIMITE_P5, LIMITE_P5, LIMITE_P5, -LIMITE_P5, -LIMITE_P5]
+    eje.plot(borde, [-LIMITE_P5, -LIMITE_P5, LIMITE_P5, LIMITE_P5,
+                     -LIMITE_P5], color="black", linestyle="--",
+             linewidth=1.0, label="Dominio [-5, 5]²")
     eje.scatter(inicial[:, 0], inicial[:, 1], color=NARANJA, s=28,
-                label="Posiciones iniciales")
+                zorder=3, label="Posiciones iniciales")
+    for i, (px, py) in enumerate(inicial, start=1):
+        eje.annotate(str(i), (px, py), textcoords="offset points",
+                     xytext=(4, 4), fontsize=6.5)
     eje.scatter([mejor[0]], [mejor[1]], color=VERDE, marker="*", s=220,
                 zorder=4, label="gbest final")
-    eje.scatter(final[:, 0], final[:, 1], color=AZUL, marker="x", s=40,
-                linewidths=1.2, zorder=5, label="Posiciones finales")
+    eje.set_title("(a) Dominio completo", fontsize=9)
     eje.set_xlabel("x")
     eje.set_ylabel("y")
-    eje.set_xlim(-5.2, 5.2)
-    eje.set_ylim(-5.2, 5.2)
+    marcas = [-5, -2.5, 0, 2.5, 5]
+    eje.set_xticks(marcas)
+    eje.set_yticks(marcas)
+    eje.set_xlim(-5.5, 5.5)
+    eje.set_ylim(-5.5, 5.5)
     eje.set_aspect("equal")
-    eje.legend(loc="upper center", bbox_to_anchor=(0.5, -0.14), ncol=3,
-               frameon=False, fontsize=8)
     coma(eje)
+
+    radio = 1.15 * max(np.abs(final).max(), np.abs(mejor).max())
+    exponente = int(np.floor(np.log10(radio)))
+    escala = 10.0 ** exponente
+    zoom.scatter(final[:, 0], final[:, 1], color=AZUL, marker="x", s=40,
+                 linewidths=1.2, zorder=5, label="Posiciones finales")
+    zoom.scatter([mejor[0]], [mejor[1]], facecolors="none",
+                 edgecolors=VERDE, marker="*", s=260, linewidths=1.4,
+                 zorder=4)
+    zoom.set_xlim(-radio, radio)
+    zoom.set_ylim(-radio, radio)
+    zoom.set_aspect("equal")
+    formato = FuncFormatter(
+        lambda v, _: f"{v / escala:.1f}".replace(".", ","))
+    zoom.xaxis.set_major_formatter(formato)
+    zoom.yaxis.set_major_formatter(formato)
+    zoom.set_title("(b) Zoom alrededor del origen", fontsize=9)
+    zoom.set_xlabel(f"x (en unidades de $10^{{{exponente}}}$)")
+    zoom.set_ylabel(f"y (en unidades de $10^{{{exponente}}}$)")
+    manijas, nombres = eje.get_legend_handles_labels()
+    manijas += zoom.get_legend_handles_labels()[0]
+    nombres += zoom.get_legend_handles_labels()[1]
+    figura.legend(manijas, nombres, loc="lower center", ncol=4,
+                  frameon=False, fontsize=8)
+    figura.tight_layout(rect=(0, 0.06, 1, 1))
     guardar(figura, "p5_curvas_nivel")
 
 
