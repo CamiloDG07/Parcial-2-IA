@@ -1,0 +1,132 @@
+{
+  "valores": [
+    1,
+    4,
+    7,
+    5,
+    3,
+    6,
+    9,
+    8,
+    5
+  ],
+  "maximos_locales": [
+    2,
+    6
+  ],
+  "maximo_global": 6,
+  "filas": [
+    {
+      "inicio": 0,
+      "trayectoria": [
+        0,
+        1,
+        2
+      ],
+      "final": 2,
+      "valor_final": 7,
+      "llega_global": false
+    },
+    {
+      "inicio": 1,
+      "trayectoria": [
+        1,
+        2
+      ],
+      "final": 2,
+      "valor_final": 7,
+      "llega_global": false
+    },
+    {
+      "inicio": 2,
+      "trayectoria": [
+        2
+      ],
+      "final": 2,
+      "valor_final": 7,
+      "llega_global": false
+    },
+    {
+      "inicio": 3,
+      "trayectoria": [
+        3,
+        2
+      ],
+      "final": 2,
+      "valor_final": 7,
+      "llega_global": false
+    },
+    {
+      "inicio": 4,
+      "trayectoria": [
+        4,
+        5,
+        6
+      ],
+      "final": 6,
+      "valor_final": 9,
+      "llega_global": true
+    },
+    {
+      "inicio": 5,
+      "trayectoria": [
+        5,
+        6
+      ],
+      "final": 6,
+      "valor_final": 9,
+      "llega_global": true
+    },
+    {
+      "inicio": 6,
+      "trayectoria": [
+        6
+      ],
+      "final": 6,
+      "valor_final": 9,
+      "llega_global": true
+    },
+    {
+      "inicio": 7,
+      "trayectoria": [
+        7,
+        6
+      ],
+      "final": 6,
+      "valor_final": 9,
+      "llega_global": true
+    },
+    {
+      "inicio": 8,
+      "trayectoria": [
+        8,
+        7,
+        6
+      ],
+      "final": 6,
+      "valor_final": 9,
+      "llega_global": true
+    }
+  ],
+  "exitos": 5,
+  "total": 9,
+  "proporcion": 0.5555555555555556,
+  "reinicios": [
+    {
+      "k": 1,
+      "prob_al_menos_un_exito": 0.5555555555555556
+    },
+    {
+      "k": 2,
+      "prob_al_menos_un_exito": 0.8024691358024691
+    },
+    {
+      "k": 3,
+      "prob_al_menos_un_exito": 0.9122085048010974
+    },
+    {
+      "k": 5,
+      "prob_al_menos_un_exito": 0.9826584700841674
+    }
+  ]
+}

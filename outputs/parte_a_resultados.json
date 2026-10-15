@@ -1,0 +1,160 @@
+{
+  "punto1": {
+    "cromosomas": [
+      "00101",
+      "01100",
+      "10010",
+      "11001"
+    ],
+    "x": [
+      5,
+      12,
+      18,
+      25
+    ],
+    "aptitud": [
+      25,
+      144,
+      324,
+      625
+    ],
+    "suma": 1118,
+    "probabilidad": [
+      0.022361359570661897,
+      0.12880143112701253,
+      0.2898032200357782,
+      0.5590339892665475
+    ],
+    "hijo1": "01001",
+    "hijo2": "11100",
+    "x_hijo1": 9,
+    "x_hijo2": 28,
+    "aptitud_hijo1": 81,
+    "aptitud_hijo2": 784,
+    "mutado": "01000",
+    "x_mutado": 8,
+    "aptitud_mutado": 64,
+    "unos_por_posicion": [
+      2,
+      2,
+      2,
+      1,
+      2
+    ],
+    "con_cuarto_bit_uno": [
+      "10010"
+    ],
+    "optimo_alcanzable_solo_cruce": true,
+    "optimo_en_un_cruce": false,
+    "alcanzables_solo_cruce": 32,
+    "generaciones_cierre": 3
+  },
+  "punto2": {
+    "desde0": {
+      "final": 2,
+      "trayectoria": [
+        0,
+        1,
+        2
+      ]
+    },
+    "desde4": {
+      "final": 6,
+      "trayectoria": [
+        4,
+        5,
+        6
+      ]
+    },
+    "maximos_locales": [
+      2,
+      6
+    ],
+    "valor_local_2": 7,
+    "valor_global_6": 9
+  },
+  "punto3": {
+    "casos": [
+      {
+        "caso": "A",
+        "actual": 3,
+        "candidato": 2,
+        "T": 5,
+        "u": 0.7,
+        "delta": -5,
+        "p": 1.0,
+        "acepta": true
+      },
+      {
+        "caso": "B",
+        "actual": 2,
+        "candidato": 3,
+        "T": 5,
+        "u": 0.3,
+        "delta": 5,
+        "p": 0.36787944117144233,
+        "acepta": true
+      },
+      {
+        "caso": "C",
+        "actual": 2,
+        "candidato": 3,
+        "T": 1,
+        "u": 0.3,
+        "delta": 5,
+        "p": 0.006737946999085467,
+        "acepta": false
+      }
+    ]
+  },
+  "punto4": {
+    "distancia": [
+      2.0,
+      4.0,
+      5.0
+    ],
+    "tau": [
+      1.0,
+      2.0,
+      1.0
+    ],
+    "pesos": [
+      0.25,
+      0.125,
+      0.04000000000000001
+    ],
+    "suma": 0.41500000000000004,
+    "probabilidad": [
+      0.6024096385542168,
+      0.3012048192771084,
+      0.0963855421686747
+    ],
+    "deposito": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "tau_nueva": [
+      1.8,
+      1.6,
+      0.8
+    ],
+    "probabilidades_modelo_b": [
+      0.5201560468140441,
+      0.29258777633289984,
+      0.18725617685305596
+    ]
+  },
+  "punto5": {
+    "inercia": -0.5,
+    "cognitivo": -1.2000000000000002,
+    "social": -2.6999999999999997,
+    "v_nueva": -4.4,
+    "x_nueva": -0.40000000000000036,
+    "f_nueva": 0.16000000000000028,
+    "f_pbest": 4.0,
+    "f_gbest": 1.0,
+    "actualiza_pbest": true,
+    "actualiza_gbest": true
+  }
+}
