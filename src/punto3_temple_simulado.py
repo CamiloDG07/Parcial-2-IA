@@ -26,12 +26,27 @@ def prob_aceptacion(delta, temperatura):
 
 
 def temple_simulado():
-    """Ejecuta 100 iteraciones y devuelve el registro completo."""
+    """Ejecuta 100 iteraciones y devuelve el registro completo.
+
+    La fila 0 del historial es el estado inicial; no decide nada.
+    """
     generador = random.Random(SEMILLA)
     actual = ESTADO_INICIAL
     mejor = actual
     temperatura = TEMPERATURA_INICIAL
-    historial = []
+    historial = [{
+        "iteracion": 0,
+        "temperatura": None,
+        "candidato": None,
+        "delta": None,
+        "probabilidad": None,
+        "u": None,
+        "aceptado": None,
+        "estado_actual": actual,
+        "energia_actual": energia(actual),
+        "mejor_estado": mejor,
+        "mejor_energia": energia(mejor),
+    }]
     for iteracion in range(1, ITERACIONES + 1):
         vecinos = [v for v in (actual - 1, actual + 1)
                    if -LIMITE <= v <= LIMITE]

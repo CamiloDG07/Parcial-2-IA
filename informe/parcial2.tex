@@ -490,8 +490,10 @@ solo si mejora estrictamente. \\ \hline
 Temperatura & La iteración $k$ usa $T_k=10\cdot0{,}90^{k-1}$; luego se enfría. \\
 \hline
 Historial & Por iteración: temperatura usada, candidato, $\Delta E$, $P$,
-$u$, decisión, estado y energía actuales, mejor estado y mejor energía. El
-estado inicial ($x_0=5$) no se incluye en las 100 filas. \\ \hline
+$u$, decisión, estado y energía actuales, mejor estado y mejor energía. Incluye
+la fila 0 con el estado inicial ($x_0=5$, $E=25$, que también es la mejor
+solución hasta ese momento) y 100 filas más de iteraciones. La fila 0 no cuenta
+como iteración ni decide nada. \\ \hline
 \end{tabular}
 \caption{Decisiones de implementación del punto 3.}
 \label{tab:p3-decisiones}
@@ -521,9 +523,9 @@ historial muestra que no siempre fue así durante el recorrido.}
 
 \input{tablas/p3_b_energia.tex}
 \comoleerla
-{cuatro bloques con la iteración, la energía del estado actual y la mejor
-energía acumulada.}
-{la energía parte de \PtresEnergiaInicial{} en $x_0=5$, llega a $0$ en la
+{tres bloques con la iteración, el estado actual y su energía, y la mejor
+solución y su energía. La iteración 0 es el estado inicial.}
+{la energía parte de \PtresEnergiaInicial{} en $x_0=5$ (iteración 0), llega a $0$ en la
 iteración \PtresIterMejor{} y vuelve a subir a \PtresEnergiaSalida{} en la
 iteración \PtresIterSalida{}.}
 {la mejor energía no sube nunca; la actual sí puede subir cuando se acepta un
@@ -550,8 +552,9 @@ iteración.}
 \label{fig:p3-energia}
 \end{figure}
 \comoleerla
-{dos escalones: la energía del estado actual (azul) y la mejor energía vista
-hasta ese momento (naranja punteada).}
+{dos escalones desde la iteración 0 (estado inicial, $E=25$): la energía del
+estado actual (azul) y la mejor energía vista hasta ese momento (naranja
+punteada).}
 {el estado actual desciende hasta $0$ en la iteración \PtresIterMejor{}, vuelve
 a subir hasta energía \PtresEnergiaMaxima{} en varias ocasiones y desde la
 iteración \PtresDesdeFijo{} queda fijo en $0$. La mejor energía

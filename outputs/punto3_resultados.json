@@ -4,6 +4,19 @@
   "energia_inicial": 25,
   "historial": [
     {
+      "iteracion": 0,
+      "temperatura": null,
+      "candidato": null,
+      "delta": null,
+      "probabilidad": null,
+      "u": null,
+      "aceptado": null,
+      "estado_actual": 5,
+      "energia_actual": 25,
+      "mejor_estado": 5,
+      "mejor_energia": 25
+    },
+    {
       "iteracion": 1,
       "temperatura": 10.0,
       "candidato": 4,

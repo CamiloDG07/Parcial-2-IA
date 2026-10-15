@@ -123,9 +123,10 @@ def figuras_punto2(datos):
 def figuras_punto3(datos):
     historial = datos["historial"]
     iteraciones = [f["iteracion"] for f in historial]
+    decisiones = [f for f in historial if f["iteracion"] >= 1]
     figura, eje = plt.subplots(figsize=(6.0, 3.3))
-    eje.semilogy(iteraciones, [f["temperatura"] for f in historial],
-                 color=AZUL)
+    eje.semilogy([f["iteracion"] for f in decisiones],
+                 [f["temperatura"] for f in decisiones], color=AZUL)
     eje.set_xlabel("Iteración")
     eje.set_ylabel("Temperatura (escala logarítmica)")
     guardar(figura, "p3_temperatura")

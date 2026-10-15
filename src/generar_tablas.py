@@ -242,7 +242,15 @@ def punto3(a, b):
            for c in a["casos"]],
           "Aceptación de cada transición analizada de forma independiente.",
           "tab:p3a-casos")
-    hist = b["historial"]
+    # Fila 0: estado inicial. hist contiene solo las iteraciones 1 a 100,
+    # de modo que hist[k] es la iteracion k + 1.
+    completo = b["historial"]
+    fila0 = completo[0]
+    assert (fila0["iteracion"], fila0["estado_actual"],
+            fila0["energia_actual"]) == (0, 5, 25)
+    assert (fila0["mejor_estado"], fila0["mejor_energia"]) == (5, 25)
+    hist = completo[1:]
+    assert [f["iteracion"] for f in hist] == list(range(1, 101))
     tabla("p3_b_resumen",
           ["Estado inicial", "Mejor solución", "Energía mínima",
            "Estado final", "Energía final"],
@@ -257,13 +265,15 @@ def punto3(a, b):
           en_bloques(filas, 5),
           "Historial de la temperatura usada en cada iteración.",
           "tab:p3b-temperatura", tamano="\\scriptsize", separacion=3)
-    filas = [[entero(f["iteracion"]), entero(f["energia_actual"]),
-              entero(f["mejor_energia"])] for f in hist]
-    tabla("p3_b_energia", ["Iter.", "Actual", "Mejor"] * 4,
-          en_bloques(filas, 4),
-          "Historial de la energía del estado actual y de la mejor "
-          "energía acumulada.", "tab:p3b-energia", tamano="\\scriptsize",
-          separacion=3)
+    filas = [[entero(f["iteracion"]), entero(f["estado_actual"]),
+              entero(f["energia_actual"]), entero(f["mejor_estado"]),
+              entero(f["mejor_energia"])] for f in completo]
+    tabla("p3_b_energia",
+          ["Iter.", "$x$ actual", "$E$ actual", "$x$ mejor", "$E$ mejor"] * 3,
+          en_bloques(filas, 3),
+          "Historial del estado actual y de la mejor solución con sus "
+          "energías (la iteración 0 es el estado inicial).",
+          "tab:p3b-energia", tamano="\\scriptsize", separacion=1.2)
     mejor_it = next(f["iteracion"] for f in hist
                     if f["mejor_energia"] == b["energia_minima"])
     salida = next(f["iteracion"] for f in hist
